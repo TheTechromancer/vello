@@ -17,6 +17,16 @@ import package::helpers::image::{
 import package::helpers::image::cubic_weights;
 import package::helpers::paint::{PAINT_TEXTURE_INDEX_MASK, load_encoded_paint_texel};
 
+fn sample_native_image_paint(
+    external_texture: texture_2d<f32>,
+    external_sampler: sampler,
+    opacity: u32,
+    sample_xy: vec2<f32>,
+) -> vec4<f32> {
+    let image_opacity = f32(opacity & 0xffu) * (1.0 / 255.0);
+    return image_opacity * textureSampleLevel(external_texture, external_sampler, sample_xy, 0.0);
+}
+
 fn sample_image_paint(
     encoded_paints_texture: texture_2d<u32>,
     tex_width_bits: u32,
